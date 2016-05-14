@@ -83,7 +83,7 @@ authors = numpy.unique(authors).tolist()
 len(authors)
 # 9882
 
-# We can't deal with author name disambiguation for now
+# We can't deal with author name disambiguation for now - I even see some spelling mistakes :/
 lookup = pandas.DataFrame(0,index=authors,columns=meta.keys())
 for mid,entry in meta.iteritems():
     author_list = parse_authors(entry)
