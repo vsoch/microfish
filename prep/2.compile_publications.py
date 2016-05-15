@@ -108,16 +108,52 @@ for author,row in lookup.iterrows():
 
 collaborations.to_csv("%s/author_collaborations.tsv" %outfolder,sep="\t")
 
-# Who has the most?
-#collaborations.sum()[collaborations.sum()==274] / 2
-#David Heckerman    137
-#dtype: int64
+# List of leaders
+leaders.sort_values(inplace=True,ascending=False)
+leaders = leaders.index.tolist()
+leader_counts = pandas.DataFrame(columns=["name","count"])
 
-# Mean
-# 0.0015010968734855959
-# collaborations.sum()[collaborations.sum()!=0].mean() /2
-# Of those that have collaborations, mean is...
-# 7.7502379190017976
+for leader in leaders:
+    count = len(lookup.loc[leader][lookup.loc[leader]!=0].index)
+    leader_counts.loc[leader] = [leader,count]
+
+# Who has the most?
+#leader_counts[leader_counts["count"]==leader_counts["count"].max()]
+#Li Deng  Li Deng    149
+
+leader_counts.sort_values(inplace=True,by=["count"],ascending=False)
+leader_counts
+
+#Li Deng                                      Li Deng    149
+#Alex Acero                                Alex Acero    133
+#Dong Yu                                      Dong Yu    107
+#Yu Zheng                                    Yu Zheng     77
+#Thomas Zimmermann                  Thomas Zimmermann     76
+#Richard Szeliski                    Richard Szeliski     74
+#Philip A Chou                          Philip A Chou     65
+#Wei-Ying Ma                              Wei-Ying Ma     65
+#Heung-Yeung Shum                    Heung-Yeung Shum     65
+#Mary Czerwinski                      Mary Czerwinski     65
+#Jie Liu                                      Jie Liu     63
+#Jim Gray                                    Jim Gray     62
+#Jaime Teevan                            Jaime Teevan     61
+#Margus Veanes                          Margus Veanes     61
+#Edward Cutrell                        Edward Cutrell     61
+#Christopher M Bishop            Christopher M Bishop     57
+#Surajit Chaudhuri                  Surajit Chaudhuri     57
+#Benjamin Livshits                  Benjamin Livshits     57
+#Jianfeng Gao                            Jianfeng Gao     57
+#Paramvir Bahl                          Paramvir Bahl     57
+#Yuri Gurevich                          Yuri Gurevich     56
+#Shipeng Li                                Shipeng Li     54
+#David Heckerman                      David Heckerman     54
+#Dinei Florencio                      Dinei Florencio     53
+#Abigail Sellen                        Abigail Sellen     53
+#Nachiappan Nagappan              Nachiappan Nagappan     53
+#Xiaodong He                              Xiaodong He     53
+#Xing Xie                                    Xing Xie     53
+#Eric Horvitz                            Eric Horvitz     51
+#Yi-Min Wang                              Yi-Min Wang     51
 
 # GRAPHISTRY VISUALIZATION ###############################################
 df = pandas.DataFrame(columns=["source","target","value"])
