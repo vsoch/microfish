@@ -2,6 +2,9 @@
 
 [author collaborations](https://goo.gl/WE4nMT)
 
+**under development!**
+This project has only been worked on for an afternoon! Currently, the only view is to search and view the mean similarity score for a single author across all methods. More advanced visualizations, views for methods, and graphs will be coming soon.
+
 ### Large File Storage
 **Important** This repo uses Github Large File Storage (lfs) for some of the data! You may need to [install and configure](https://git-lfs.github.com/) for the clone to work properly.
 
