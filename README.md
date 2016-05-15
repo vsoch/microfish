@@ -1,6 +1,7 @@
 # Microfish
 
 [author collaborations](https://goo.gl/WE4nMT)
+[preview application](http://vsoch.github.io/microfish/)
 
 **under development!**
 This project has only been worked on for an afternoon! Currently, the only view is to search and view the mean similarity score for a single author across all methods. More advanced visualizations, views for methods, and graphs will be coming soon.
