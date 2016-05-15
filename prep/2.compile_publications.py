@@ -106,4 +106,49 @@ for author,row in lookup.iterrows():
         collaborations.loc[author,coauthors] = collaborations.loc[author,coauthors] + 1
         collaborations.loc[coauthors,author] = collaborations.loc[coauthors,author] + 1
 
-collaborations_df = pandas.DataFrame(columns=["source","target","value"])
+collaborations.to_csv("%s/author_collaborations.tsv" %outfolder,sep="\t")
+
+# Who has the most?
+#collaborations.sum()[collaborations.sum()==274] / 2
+#David Heckerman    137
+#dtype: int64
+
+# Mean
+# 0.0015010968734855959
+# collaborations.sum()[collaborations.sum()!=0].mean() /2
+# Of those that have collaborations, mean is...
+# 7.7502379190017976
+
+# GRAPHISTRY VISUALIZATION ###############################################
+df = pandas.DataFrame(columns=["source","target","value"])
+
+count=1
+thresh=0.9
+seen = []
+for row in collaborations.iterrows():
+    author1_name = row[0]
+    print "Parsing author %s, %s" %(author1_name,count)
+    similar_authors = row[1][row[1].abs() >= thresh]
+    for author2_name,v in similar_authors.iteritems():
+        pair_id = "_".join(numpy.sort([author1_name,author2_name]))
+        if author2_name != author1_name and pair_id not in seen:
+            seen.append(pair_id)
+            df.loc[count] = [author1_name,author2_name,v] 
+            count+=1
+
+# Make a lookup
+alookup = dict()
+unique_authors = numpy.unique(df["source"].tolist() + df["target"].tolist()).tolist()
+for u in range(len(unique_authors)):
+    alookup[unique_authors[u]] = unique_authors[u].decode('utf-8').encode('ascii',errors='replace').replace('?',' ')
+    
+# Replace sources and targets with lookups
+sources = [alookup[x] for x in df["source"]]
+targets = [alookup[x] for x in df["target"]]
+df2=pandas.DataFrame()
+
+df2["source"] = sources
+df2["target"] = targets
+df2["value"] = df["value"]
+# [36647 rows x 3 columns]
+df2.to_csv("%s/author_sims_graphistry_pt9.csv" %outfolder,index=False,encoding='utf-8')
