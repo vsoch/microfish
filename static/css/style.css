@@ -1,0 +1,100 @@
+body {
+  background: #831F69;
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+}
+
+.summary {
+  background: #fff;
+  padding: 4em 4em 2em;
+  margin-top: 60px;
+  margin-left: 50px;
+  box-shadow: 0 0 1em #222;
+  border-radius: 2px;
+}
+
+
+form {
+  background: #fff;
+  padding: 4em 4em 2em;
+  max-width: 420px;
+  margin: 60px auto 0;
+  box-shadow: 0 0 1em #222;
+  border-radius: 2px;
+}
+.question_button {
+  box-shadow: 0 0 1em #222;
+  border-radius:2px; 
+  width:100% !important; 
+  margin-top:5px
+}
+form h2 {
+  margin: 0 0 50px 0;
+  padding: 10px;
+  text-align: center;
+  font-size: 30px;
+  color: #666666;
+  border-bottom: solid 1px #e5e5e5;
+}
+form p {
+  margin: 0 0 3em 0;
+  position: relative;
+}
+form input {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  outline: none;
+  margin: 0;
+}
+form .button {
+  display: block;
+  padding: 2px 5px;
+  color: #666;
+}
+label {
+  font-size:16px;
+  color: #666;
+}
+
+form input[type="submit"] {
+  background: #DB3503;
+  border-radius: 2px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: block;
+  font-size: 2em;
+  line-height: 1.6em;
+  margin: 2em 0 0;
+  outline: none;
+  padding: .8em 0;
+}
+form input[type="submit"]:hover {
+  background: #FF6E08;
+}
+
+/* Containers for buttons */
+
+.select2, .select2-container, .select2-container--default, .select2-container--focus, .select2-selection, .select2-selection--single {
+  max-width:270px !important;
+}
+
+/* Author heatmap */
+rect.bordered {
+  stroke: #E6E6E6;
+  stroke-width:2px;   
+}
+text.mono {
+  font-size: 9pt;
+  font-family: Consolas, courier;
+  fill: #aaa;
+}
+
+text.axis-workweek {
+  fill: #000;
+}
+
+text.axis-worktime {
+  fill: #000;
+}
