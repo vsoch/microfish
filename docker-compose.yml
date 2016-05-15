@@ -1,0 +1,20 @@
+web:
+  image: vanessa/microfish
+  restart: always
+  expose:
+    - "8000"
+  volumes:
+    - /code/static
+  command: /usr/local/bin/gunicorn -w 2 -b :8000 index:app
+
+nginx:
+  image: nginx
+  restart: always
+  ports:
+    - "80:80"
+  volumes:
+    - /www/static
+  volumes_from:
+    - web
+  links:
+    - web:web
