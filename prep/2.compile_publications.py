@@ -108,7 +108,46 @@ for author,row in lookup.iterrows():
 
 collaborations.to_csv("%s/author_collaborations.tsv" %outfolder,sep="\t")
 
-# List of leaders
+# Who has the most collaborations? Let's binarize to 1, so working with someone >1 doesn't
+# give extra points!
+collaborations_bin = collaborations.copy()
+collaborations_bin[collaborations_bin!=0] = 1
+ranked_collab = collaborations_bin.sum()
+ranked_collab.sort_values(inplace=True,ascending=False)
+
+#David Heckerman            137
+#Matthew J Smith            122
+#Jamie Shotton              120
+#Jie Liu                    106
+#Li Deng                    100
+#Mary Czerwinski             96
+#Antonio Criminisi           93
+#Shahram Izadi               90
+#Edward Cutrell              86
+#Jaime Teevan                84
+#Steve Hodges                83
+#Jim Gray                    83
+#Geoffrey Zweig              80
+#Ranveer Chra                76
+#Dong Yu                     76
+#Xiaodong He                 74
+#Bongshin Lee                74
+#Jonathan M Carlson          74
+#Wei-Ying Ma                 73
+#Malcolm Slaney              72
+#Wolfram Schulte             72
+#Alex Acero                  72
+#Pushmeet Kohli              71
+#Richard Szeliski            70
+#Thomas Moscibroda           69
+#Abigail Sellen              69
+#Ben Glocker                 69
+#Dimitrios Lymberopoulos     69
+#Ender Konukoglu             68
+#Jianfeng Gao                68
+
+
+# Who has the most publications?
 leaders.sort_values(inplace=True,ascending=False)
 leaders = leaders.index.tolist()
 leader_counts = pandas.DataFrame(columns=["name","count"])
@@ -117,7 +156,7 @@ for leader in leaders:
     count = len(lookup.loc[leader][lookup.loc[leader]!=0].index)
     leader_counts.loc[leader] = [leader,count]
 
-# Who has the most?
+# Who has the most publications?
 #leader_counts[leader_counts["count"]==leader_counts["count"].max()]
 #Li Deng  Li Deng    149
 
@@ -154,6 +193,45 @@ leader_counts
 #Xing Xie                                    Xing Xie     53
 #Eric Horvitz                            Eric Horvitz     51
 #Yi-Min Wang                              Yi-Min Wang     51
+
+# What about collaborations per publication?
+leader_counts["collaborations"] = ranked_collab[leader_counts.index]
+collabs_perpub = leader_counts["collaborations"]/leader_counts["count"]
+collabs_perpub.sort_values(inplace=True,ascending=False)
+
+#Tammy Riklin Raviv       67
+#Nuno Sousa               67
+#D Louis Collins          67
+#Christopher R Durst      67
+#Raj Jena                 67
+#Owen M Thomas            67
+#Carlos A Silva           67
+#Senan Doyle              67
+#Raphael Meier            67
+#Cagatay Demiralp         67
+#Yuliya Burren            67
+#Rol Wiest                67
+#Brian B Avants           67
+#Doina Precup             67
+#Andac Hamamci            67
+#Duygu Sarikaya           67
+#Nigel M John             67
+#Patricia Buendia         67
+#Michael Ryan             67
+#Danial Lashkari          67
+#Flor Vasseur             67
+#Marcel Prastawa          67
+#Jason J Corso            67
+#Nicolas Cordier          67
+#Lawrence Schwartz        67
+#Nicholas Ayache          67
+#Elizabeth Gerstner       67
+#Nagesh K Subbanna        67
+#Gabor Szekely            67
+#Dong Hye Ye              67
+
+# One paper with 68 authors! cheating! We would need to redo the collaborations
+# matrix, and not include these outlier papers.
 
 # GRAPHISTRY VISUALIZATION ###############################################
 df = pandas.DataFrame(columns=["source","target","value"])
