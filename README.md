@@ -1,6 +1,6 @@
 # Microfish
 
-**under development!**
+[author collaborations](https://goo.gl/WE4nMT)
 
 ### Large File Storage
 **Important** This repo uses Github Large File Storage (lfs) for some of the data! You may need to [install and configure](https://git-lfs.github.com/) for the clone to work properly.
