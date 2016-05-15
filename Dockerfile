@@ -18,4 +18,4 @@ RUN pip install networkx
 ADD . /code
 WORKDIR /code
 
-EXPOSE 8033
+EXPOSE 5000

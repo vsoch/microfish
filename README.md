@@ -1,6 +1,7 @@
 # Microfish
 
 [author collaborations](https://goo.gl/WE4nMT)
+
 [preview application](http://vsoch.github.io/microfish/)
 
 **under development!**
@@ -17,6 +18,8 @@ Without Docker
       python index.py
 
 
+Then go to http://127.0.0.1:5000/ in your browser.
+
 With Docker
 
       git clone http://www.github.com/vsoch/microfish
@@ -24,7 +27,11 @@ With Docker
       docker-compose up -d
 
 
-Then go to http://127.0.0.1:5000/ in your browser.
+To get the docker container IP address, you need to do:
+      
+      docker inspect microfish_web_1 |grep "IPAddress"
+
+And it should be repeated twice (will have better solution for this). Then go to ${IPADDRESS}:5000 in your browser.
 
 
 ### About the Visualization
