@@ -1,31 +1,12 @@
-<!doctype html>
-<html>
-  <head>
-      <meta charset="utf-8">
-      <title>Microfish!</title>
-      <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-      <link rel="stylesheet" href="{{ url_for('static', filename='css/datatables.min.css') }}">
+{% extends "base.html" %}
 
-      <!-- For better reproducibility, these should be served with application-->
-      <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css">
-      <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-      <script src="{{ url_for('static', filename='js/datatables.min.js') }}"></script>
-
-  </head>
-  <body>
-
-    <div class="container-fluid">
+{% block content %}
 
      <!-- SIDEBAR CONTROLS -->
       <div class="col-md-3">
-         <!-- Not yet developed 
          <div class="row">
 
-                <form action="/method" method="POST">
+                <form action="/method" method="POST" style="margin-top:60px">
                     <p>
 
                    <label for="method">Method</label>
@@ -39,11 +20,11 @@
           
                    </p>
                 </form>
-        </div>-->
+        </div>
         <div class="row">
             
-            <form action="/author" method="POST">
-            <p>
+            <form action="/author" method="POST" style="margin-bottom:20px">
+            
             <label for="author" class="floatLabel">Author</label><br>
 
              <select id="author" name="author">
@@ -52,7 +33,6 @@
              {% endfor %}    
              </select>
              <input type="submit" value="view author" id="view_author">
-             </p>
              </form>
 
         </div>
@@ -146,8 +126,9 @@
         </div>
      </div>
   </div><!--column-->
-</div>
+{% endblock %}
 
+{% block scripts %}
     <script type="text/javascript">
     $(document).ready(function() {
         $("#method").select2();
@@ -174,7 +155,4 @@
         $('#ranked_methods').DataTable();
     });
     </script>
-
-  </body>
-
-</html>
+{% endblock %}

@@ -92,41 +92,50 @@ def random_colors(concepts):
 def index():
     methods = app.pubs.columns.tolist() 
     authors = app.authors.index.tolist()
-    # For now, select a random author
-    author = choice(authors)
-    return base_author(author)
-    #return render_template("index.html",methods=methods,
-    #                                    authors=authors)
+    return render_template("index.html",methods=methods,
+                                        authors=authors)
 
 @app.route("/summary")
 def summary_view():
-    # What methods are being used?
+    # Not yet developed
     methods = app.pubs.columns.tolist() 
     authors = app.authors.index.tolist()
     return render_template("index.html",methods=methods,
                                         authors=authors)    
 
-@app.route("/method",methods=['POST'])
+@app.route("/method",methods=['POST','GET'])
 def view_method():
-    method = request.form["method"]
-    print "Method is %s" %(method)
+
     methods = app.pubs.columns.tolist() 
     authors = app.authors.index.tolist()
+
+    if request.method == "POST":
+        method = request.form["method"]
+        print "Method is %s" %(method)
+    else:
+        method = choice(methods)
+
     return render_template("index.html",methods=methods,
                                         authors=authors)
 
 
-@app.route("/author",methods=['POST'])
+@app.route("/author",methods=['POST','GET'])
 def view_author():
-    author = request.form["author"]
+    '''view_author views a list of abstracts and associated meta data, and a table of method scores 
+    for a particular author. If POST data is provided, the author is retrieved from the POST, 
+    otherwise a random author is selected
+    '''
+    methods = app.pubs.columns.tolist() 
+    authors = app.authors.index.tolist()
+
+    # Retrieve author selection, or select randomly
+    if request.method == "POST":
+        author = request.form["author"]
+    else:
+        author = choice(authors)
+    
     print "Author is %s" %(author)
 
-    return base_author(author)
-
-def base_author(author):
-    '''base_author is the base view to see an author, for temporary use while methods
-    view isn't developed and we don't have this selection for the index
-    '''
     # Prepare meta data about papers
     pub_ids = app.authors.loc[author][app.authors.loc[author]!=0].index.tolist()
     pub_meta = app.meta.loc[[int(x) for x in pub_ids]].to_dict(orient="records")
@@ -140,8 +149,6 @@ def base_author(author):
     ranked_methods = ranked_methods[ranked_methods.isnull()==False]
     ranked_methods = ranked_methods.to_dict()
 
-    methods = app.pubs.columns.tolist() 
-    authors = app.authors.index.tolist()
     return render_template("author.html",methods=methods,
                                          author=author,
                                          authors=authors,
