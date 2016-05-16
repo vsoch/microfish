@@ -1,12 +1,23 @@
-{% extends "base.html" %}
+<!doctype html>
+<html>
+  <head>
+      <meta charset="utf-8">
+      <title>Microfish!</title>
+      <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/portal.css') }}">
     
-{% block content %}
+      <!-- For better reproducibility, these should be served with application-->
+      <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css">
 
-    <div class="col-md-3">
-        <div class="row">
-        <form action="/method" method="POST">
-      
-          <label for="method">Method</label><br>
+  </head>
+  <body>
+
+    <form action="/method" method="POST">
+      <p>
+
+          <label for="method">Method</label>
 
           <select id="method" name="method">
           {% for method in methods %}    
@@ -14,13 +25,11 @@
           {% endfor %}    
           </select>
           <input type="submit" value="view method" id="view_method">
-                
-        </form>
-        </div>
-
-        <div class="row">
-        <form action="/author" method="POST">
-      
+          
+      </p>
+    </form>
+    <form action="/author" method="POST">
+      <p>
           <label for="author" class="floatLabel">Author</label><br>
 
           <select id="author" name="author">
@@ -29,18 +38,9 @@
           {% endfor %}    
           </select>
           <input type="submit" value="view author" id="view_author">
-        </div>      
-
+      </p>
     </form>
 
-</div>
-<div class ="col-md-9">
-<h1 style="color:white;padding-top:200px;padding-left:200px">What would you like to explore?</h1>
-</div>
-{% endblock %}
-
-
-{% block scripts %}
     <script type="text/javascript">
     $(document).ready(function() {
         $("#method").select2();
@@ -62,4 +62,7 @@
 
     });
     </script>
-{% endblock %}
+
+  </body>
+
+</html>
