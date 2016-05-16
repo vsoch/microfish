@@ -7,7 +7,6 @@
          <div class="row">
 
                 <form action="/method" method="POST" style="margin-top:60px">
-                    <p>
 
                    <label for="method">Method</label>
 
@@ -18,7 +17,6 @@
                   </select>
                   <input type="submit" value="view method" id="view_method">
           
-                   </p>
                 </form>
         </div>
         <div class="row">
@@ -34,12 +32,11 @@
              </select>
              <input type="submit" value="view author" id="view_author">
              </form>
-
         </div>
         <div class="row">
          <a href="" target="_blank"><button id="about_button" class="btn btn-default btn-xl question_button" data-toggle="modal" data-target="#about_modal">What am I looking at?</button></a> 
-         <button id="random_button" class="btn btn-default btn-xl question_button">Select Random Author</button> 
-
+         <button id="random_button" class="btn btn-default btn-xl question_button">Select Random Method</button> 
+       
         <div class="modal fade" id="about_modal" tabindex="-1" role="dialog" aria-labelledby="about_label">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content" style="padding:20px">
@@ -48,8 +45,8 @@
                         <h4 class="modal-title" id="about_label">What am I looking at?</h4>
                     </div>
                     <div class="modal-body">
-                    <h3>Similarity of publications to papers based on abstracts</h3>
-                    <p class="well">How similar are your publications to a <a target="_blank" href="https://en.wikipedia.org/wiki/List_of_statistics_articles">large set</a> based on the context? I first <a href="https://github.com/vsoch/repofish/blob/master/analysis/wikipedia/0.make_method_models.py" target="_blank">derived a vector representation</a> for each of the methods in the large set using a method called <a href="http://deeplearning4j.org/word2vec" target="_blank">word2vec</a>. I could then parse the text from each of your publication abstracts, and map it to this space by taking a mean vector for all the words I find in your abstract. I can then calculate a similarity score of this vector to all the method vectors individually. What you are looking at in the table is the mean score, across all of your publications, for each method.</p>
+                    <h3>Publications most similar to methods based on abstracts</h3>
+                    <p class="well">How similar are your publications to a <a target="_blank" href="https://en.wikipedia.org/wiki/List_of_statistics_articles">large set</a> based on the context? I first <a href="https://github.com/vsoch/repofish/blob/master/analysis/wikipedia/0.make_method_models.py" target="_blank">derived a vector representation</a> for each of the methods in the large set using a method called <a href="http://deeplearning4j.org/word2vec" target="_blank">word2vec</a>. I could then parse the text from each of your publication abstracts, and map it to this space by taking a mean vector for all the words I find in your abstract. I can then calculate a similarity score of this vector to all the method vectors individually. What you are looking at is a list of top matches (scores > 0) that are matched to {{ themethod }}</p>
                     <h3>Where are all the visualizations?</h3>
                     <p class="well">
                     They are coming soon! This view was put together in a weekend afternoon, and you can expect the tool to be updated with views for methods, and interactive graphs across authors. For now, you can look at <a href="https://goo.gl/WE4nMT" target="_blank"> collaborations between authors</a> based on a set of papers, or explore the data and code more fully on <a href="https://github.com/vsoch/microfish" target="_blank">github</a>.
@@ -59,24 +56,23 @@
                  <button type="button" class="btn btn-default" data-dismiss="modal">Got It!</button>
              </div>
           </div>
-       </div>
-       </div>
- 
         </div>
-        </div>
+      </div>
+    </div>
+</div>
 
         <!-- ARTICLES -->
         <div class="col-md-9">
             <div class="row">
                 <div class="summary">
-                    <h2>{{ author }}</h2>
+                    <h2>{{ themethod }}</h2>
                     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                     {% for pub_meta in pubs_meta %}
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="heading{{ loop.index }}">
                             <h4 class="panel-title">
                                 <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
-                                {{ pub_meta.title }}
+                           {{'%0.2f'| format(pub_meta.score|float)}}% : {{ pub_meta.title }}
                                 </a>
                             </h4>
                          </div>
@@ -97,33 +93,6 @@
          </div><!--/summary-->
      </div><!--/row-->
 
-     <!-- AUTHOR HEATMAP -->
-     <div class="row">
-        <div class="summary">
-
-        <table id="ranked_methods" class="table table-striped table-bordered" cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th>Similarity Score</th>
-                <th>Method</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <th>Similarity Score</th>
-                <th>Method</th>
-            </tr>
-        </tfoot>
-        <tbody>
-            {% for method,score in ranked_methods.iteritems() %}
-            <tr>
-                <td>{{ score }}</td>
-                <td>{{ method }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-        </table>
-        </div>
      </div>
   </div><!--column-->
 {% endblock %}
@@ -149,10 +118,10 @@
         });
 
         $("#random_button").click(function(){
-            document.location = "/author";
+            document.location = "/method";
         });
      
-        $('#ranked_methods').DataTable();
+        $('#ranked_papers').DataTable();
     });
     </script>
 {% endblock %}

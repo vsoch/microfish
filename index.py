@@ -44,6 +44,8 @@ def parse_unicode(meta):
             if key == "authors":
                 authors = value.decode('utf-8').encode('ascii',errors='replace').replace('?',' ')
                 new_entry[key] = ", ".join(parse_authors(authors))
+            elif key == "score": # This is a float
+                new_entry[key] = value
             elif key == "url": # Don't want to replace ? with space
                 new_entry[key] = value.decode('utf-8').encode('ascii',errors='replace')                 
             else:
@@ -78,8 +80,24 @@ def flatten(df,column_names=["article_id","method","score"]):
             count+=1
     return flat
 
+
+def get_publications(pub_ids,return_dict=True):
+    '''get_publications returns meta data (as dictionary of records) and publications (a data frame 
+    of paper ids by methods) based on a set of publication ids.
+    :param pub_ids: list of publication ids
+    :param return_dict: should the publication meta data be returned as dict? (default True)
+    '''
+    pub_meta = app.meta.loc[[int(x) for x in pub_ids]]
+    if return_dict == True:
+        pub_meta = pub_meta.to_dict(orient="records")
+        pub_meta = parse_unicode(pub_meta)
+    publications = app.pubs.loc[[int(x) for x in pub_ids]]
+    publications = publications[publications.isnull()==False]
+    return pub_meta,publications
+
+
 def random_colors(concepts):
-    '''Generate N random colors'''
+    '''Generate N random colors (not used yet)'''
     colors = {}
     for x in range(len(concepts)):
         concept = concepts[x]
@@ -90,6 +108,7 @@ def random_colors(concepts):
 
 @app.route("/")
 def index():
+    '''index view displays the author / method selection box'''
     methods = app.pubs.columns.tolist() 
     authors = app.authors.index.tolist()
     return render_template("index.html",methods=methods,
@@ -97,7 +116,8 @@ def index():
 
 @app.route("/summary")
 def summary_view():
-    # Not yet developed
+    '''summary view (not yet developed) will have summary statistics and global / high level plots
+    '''
     methods = app.pubs.columns.tolist() 
     authors = app.authors.index.tolist()
     return render_template("index.html",methods=methods,
@@ -105,19 +125,35 @@ def summary_view():
 
 @app.route("/method",methods=['POST','GET'])
 def view_method():
-
+    '''view_method views a list of publications most strongly associated with a particular method, 
+    and gives the user the option to explore by clicking on an author. If POST data is provided, 
+    the method is retrieved from the POST, otherwise a random method is selected
+    '''
     methods = app.pubs.columns.tolist() 
     authors = app.authors.index.tolist()
 
     if request.method == "POST":
         method = request.form["method"]
-        print "Method is %s" %(method)
     else:
         method = choice(methods)
 
-    return render_template("index.html",methods=methods,
-                                        authors=authors)
+    print "Method is %s" %(method)
+ 
+    # Get publications and meta data for most highly matched papers
+    ranked_papers = app.pubs[method].copy()
+    ranked_papers.sort(inplace=True,ascending=False)
+    ranked_papers = ranked_papers[ranked_papers>0]
+    pub_ids = ranked_papers[ranked_papers>0].index.tolist()
+    pub_meta, publications = get_publications(pub_ids,return_dict=False)
+    pub_meta["score"] = ranked_papers.loc[pub_meta.index.tolist()]
+    pub_meta = parse_unicode(pub_meta.to_dict(orient="records"))
 
+    return render_template("method.html",methods=methods,
+                                        authors=authors,
+                                        themethod=method,
+                                        pubs_meta=pub_meta,
+                                        publications=publications,
+                                        ranked_papers=ranked_papers.to_dict())
 
 @app.route("/author",methods=['POST','GET'])
 def view_author():
@@ -138,10 +174,7 @@ def view_author():
 
     # Prepare meta data about papers
     pub_ids = app.authors.loc[author][app.authors.loc[author]!=0].index.tolist()
-    pub_meta = app.meta.loc[[int(x) for x in pub_ids]].to_dict(orient="records")
-    pub_meta = parse_unicode(pub_meta)
-    publications = app.pubs.loc[[int(x) for x in pub_ids]]
-    publications.isnull()
+    pub_meta, publications = get_publications(pub_ids)
 
     # What methods does the author most strongly match to?
     ranked_methods = publications.mean()
